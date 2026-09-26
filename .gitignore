@@ -10,8 +10,12 @@ __pycache__/
 # LoRA adapters in outputs/checkpoints/ (e.g. lab2_peft_adapter, manual_ppo,
 # trl_baseline) are small and meant to be committed for reproducibility —
 # not ignored.
-outputs/logs/*
-!outputs/logs/.gitkeep
+
+# Raw stdout dumps from training runs (progress bars, warnings) — messy,
+# regenerable, not meant to be committed. The actual results (jsonl metrics,
+# comparison plots, rouge_results.json) ARE committed since the README links
+# to them directly.
+outputs/logs/*.log
 
 data/*
 !data/.gitkeep
