@@ -6,6 +6,7 @@ __pycache__/
 .vscode/
 .DS_Store
 .env
+.claude/
 
 # LoRA adapters in outputs/checkpoints/ (e.g. lab2_peft_adapter, manual_ppo,
 # trl_baseline) are small and meant to be committed for reproducibility —
