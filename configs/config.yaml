@@ -1,0 +1,52 @@
+# Central hyperparameter config. Both train_manual_ppo.py and
+# train_trl_baseline.py read from this file so comparisons are apples-to-apples.
+
+run_name: "baseline"
+seed: 42
+
+model:
+  base_model_name: "google/flan-t5-base"
+  # Path to the LoRA adapter trained in Lab 2 (PEFT summarization fine-tune).
+  # Set to null to skip PEFT and use the base model directly.
+  peft_adapter_path: "outputs/checkpoints/lab2_peft_adapter"
+
+reward_model:
+  name: "facebook/roberta-hate-speech-dynabench-r4-target"
+  not_hate_index: 0
+
+data:
+  dataset_name: "knkarthick/dialogsum"
+  split: "train"
+  max_train_samples: 5000      # raised from 2000: post-filter yield is ~86.5%, so 2000
+                                # only left ~1730 examples — not enough for a batch_size=16,
+                                # max_ppo_steps=200 run (needs >=3200). 5000 leaves margin.
+  input_min_text_length: 100
+  input_max_text_length: 400
+  instruction_prefix: "Summarize the following conversation.\n\n"
+  instruction_suffix: "\n\nSummary:"
+
+generation:
+  output_min_length: 20
+  output_max_length: 80
+  top_k: 0.0
+  top_p: 1.0
+  do_sample: true
+
+ppo:
+  learning_rate: 1.41e-5
+  batch_size: 16
+  mini_batch_size: 4
+  ppo_epochs: 1        # ablate: 1 / 2 / 4
+  gamma: 1.0            # no real time-discount for finite sequences
+  gae_lambda: 0.95      # ablate: 0.9 / 0.95 / 1.0
+  clip_eps: 0.2         # ablate: 0.1 / 0.2 / 0.3
+  kl_coef: 0.2          # ablate: 0.05 / 0.2 / 0.5
+  vf_coef: 0.5
+  max_grad_norm: 1.0
+  max_ppo_steps: 200
+
+logging:
+  log_every: 1
+  eval_every: 20
+  log_dir: "outputs/logs"
+  checkpoint_dir: "outputs/checkpoints"

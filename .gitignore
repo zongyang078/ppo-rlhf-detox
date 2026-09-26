@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.vscode/
+.DS_Store
+.env
+
+# LoRA adapters in outputs/checkpoints/ (e.g. lab2_peft_adapter, manual_ppo,
+# trl_baseline) are small and meant to be committed for reproducibility —
+# not ignored.
+outputs/logs/*
+!outputs/logs/.gitkeep
+
+data/*
+!data/.gitkeep
